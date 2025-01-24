@@ -1,9 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-    <p><a href="{{ url_for('logout') }}">Se déconnecter</a></p>
-
     <!-- Formulaire pour créer une nouvelle liste -->
     <h2>Créer une nouvelle liste</h2>
     <form action="{{ url_for('create_list') }}" method="POST">

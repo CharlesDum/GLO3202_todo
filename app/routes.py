@@ -23,7 +23,6 @@ def register_routes(app):
         return render_template("index.html")
     
     @app.route("/about")
-    @login_required
     def about():
         return render_template("about.html")
 
@@ -148,7 +147,7 @@ def register_routes(app):
             )
 
             if result.modified_count > 0:
-                flash("Tâche ajoutée avec succès", "succes")
+                flash("Tâche ajoutée avec succès", "success")
             else:
                 flash("Impossible d'ajouter la tâche", "error")
         except Exception as e:
