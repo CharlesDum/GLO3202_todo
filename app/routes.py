@@ -19,7 +19,7 @@ def register_routes(app):
                     ]
             for list in lists:
                 list["_id"] = str(list["_id"])
-            return render_template("dashboard.html", username = current_user.username, lists=lists)
+            return render_template("dashboard.html", username=current_user.username, lists=lists)
         return render_template("index.html")
     
     @app.route("/about")

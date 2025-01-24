@@ -17,8 +17,8 @@ def create_app():
     app.config["SECRET_KEY"] = os.getenv('SECRET_KEY')
 
     mongo.init_app(app)
-
     login_manager.init_app(app)
+    
     login_manager.login_view = "login"
 
     return app
