@@ -160,7 +160,7 @@ ul {
 }
 
 .accordion-header {
-    background-color: #007bff;
+    background-color: #9c9d9e;
     color: white;
     padding: 1rem;
     cursor: pointer;
@@ -169,10 +169,11 @@ ul {
     text-align: left;
     outline: none;
     font-size: 1.1rem;
+    transition: background-color 0.3s ease;
 }
 
 .accordion-header:hover {
-    background-color: #0056b3;
+    background-color: #8a8a8a;
 }
 
 .accordion-content {

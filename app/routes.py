@@ -114,10 +114,8 @@ def register_routes(app):
             elif action == "delete":
                 result = mongo.db.lists.delete_one({"_id": ObjectId(list_id), "owner": current_user.username})
 
-                if result.modified_count > 0:
-                    flash("La liste a été supprimée avec succès", "success")
-                else:
-                    flash("Impossible de supprimer la liste", "error")
+                flash("La liste a été supprimée avec succès", "success")
+
         except Exception as e:
             flash(f"Une erreur est survenue : {str(e)}", "error")
         
