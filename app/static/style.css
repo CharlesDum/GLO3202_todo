@@ -42,6 +42,7 @@ ul {
     color: white;
     border: none;
     cursor: pointer;
+    padding: 0.5rem 1.5rem;
 }
 
 .form-create-list button:hover {

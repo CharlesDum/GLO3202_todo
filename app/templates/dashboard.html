@@ -5,7 +5,7 @@
     <h2>Créer une nouvelle liste</h2>
     <form action="{{ url_for('create_list') }}" method="POST" class="form-create-list">
     <input type="text" id="listName" name="name" placeholder="Nom de la liste" required>
-    <button type="submit">Créer</button>
+    <button type="submit" >Créer</button>
     </form>
 
     <!-- Afficher les listes existantes -->
@@ -17,6 +17,7 @@
                 <form action="{{ url_for('handle_list', list_id=todo_list._id) }}" method="POST">
                     <input type="text" name="name" value="{{ todo_list.name }}" required>
                     <button type="submit" name="action" value="update">Modifier le nom</button>
+                    <button type="submit" name="action" value="delete" class="delete-button">Supprimer</button>
                 </form>
             </div>
             <div class="accordion-content">

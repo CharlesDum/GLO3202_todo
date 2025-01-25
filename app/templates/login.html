@@ -1,13 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Se connecter</h1>
-    <form method="POST" action="{{ url_for('login') }}">
-        <label for="username">Nom d'utilisateur :</label>
-        <input type="text" name="username" id="username" required>
-        <label for="password">Mot de passe :</label>
-        <input type="password" name="password" id="password" required>
-        <button type="submit">Se connecter</button>
+    <h1>Connexion</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.username.label }} <br>
+            {{ form.username(size=20) }}
+            {% for error in form.username.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.password.label }} <br>
+            {{ form.password(size=20) }}
+            {% for error in form.username.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.submit }}
+        </div>
     </form>
     <p>Vous n'avez pas de compte ? <a href="{{ url_for('signup') }}">S'inscrire</a></p>
 {% endblock %}
