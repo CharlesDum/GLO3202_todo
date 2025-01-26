@@ -114,7 +114,7 @@ ul {
     color: #ffd700;
 }
 
-/* Style des messages flash */
+/* Style pour les messages flash */
 .flash-message {
     padding: 1rem;
     margin: 0.5rem 0;
@@ -141,7 +141,7 @@ ul {
     margin-right: 0.5rem;
 }
 
-/* Accordéon */
+/* Style pour l'accordéon */
 .accordion {
     margin-top: 20px;
 }

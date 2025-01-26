@@ -3,6 +3,7 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
 from app import mongo
 
+# Formulaire d'inscription
 class SignupForm(FlaskForm):
     username = StringField('Nom d\'utilisateur', validators=[
         DataRequired(message="Le nom d'utilisateur est requis"),
@@ -19,6 +20,7 @@ class SignupForm(FlaskForm):
         if user:
             raise ValidationError("Ce nom d'utilisateur est déjà pris")
 
+# Formulaire de connexion
 class LoginForm(FlaskForm):
     username = StringField('Nom  d\'utilisateur', validators=[
         DataRequired(message="Le nom d'utilisateur est requis")

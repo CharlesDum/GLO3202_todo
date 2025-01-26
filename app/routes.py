@@ -11,6 +11,7 @@ def load_user(user_id):
     return User(user) if user else None
 
 def register_routes(app):
+    # Route vers la page d'accueil [Pas authentifié] ou la page du tableau de bord [Authentifié]
     @app.route("/")
     def index():
         if current_user.is_authenticated:
@@ -23,10 +24,12 @@ def register_routes(app):
             return render_template("dashboard.html", username=current_user.username, lists=lists)
         return render_template("index.html")
     
+    # Route vers la page à propos
     @app.route("/about")
     def about():
         return render_template("about.html")
-
+    
+    # Route vers la page de connexion [GET] ou pour connecter un utilisateur [POST]
     @app.route("/login", methods=["GET", "POST"])
     def login():
         form = LoginForm()
@@ -44,6 +47,7 @@ def register_routes(app):
 
         return render_template("login.html", form=form)
 
+    # Route vers la page d'inscription [GET] ou pour inscrire un nouvel utilisateur [POST]
     @app.route("/signup", methods=["GET", "POST"])
     def signup():
         form = SignupForm()
@@ -60,6 +64,7 @@ def register_routes(app):
             
         return render_template("signup.html", form=form)
     
+    # Route pour déconnecter un utilisateur
     @app.route("/logout")
     @login_required
     def logout():
@@ -67,6 +72,7 @@ def register_routes(app):
         flash("Déconnexion réussie.", "success")
         return redirect(url_for("index"))
 
+    # Route pour créer une liste de tâches
     @app.route("/lists", methods=["POST"])
     @login_required
     def create_list():
@@ -84,6 +90,7 @@ def register_routes(app):
         flash("Liste créée avec succès", "success")
         return redirect(url_for("index"))
     
+    # Route pour modifier ou supprimer une liste de tâches
     @app.route("/lists/<list_id>", methods=["POST"])
     @login_required
     def handle_list(list_id):
@@ -121,6 +128,7 @@ def register_routes(app):
         
         return redirect(url_for("index"))
     
+    # Route pour ajouter une tâche
     @app.route("/lists/<list_id>/tasks", methods=["POST"])
     @login_required
     def add_task(list_id):
@@ -150,6 +158,7 @@ def register_routes(app):
         
         return redirect(url_for("index"))
     
+    # Route pour modifier ou Supprimer une tâche
     @app.route("/lists/<list_id>/tasks/<task_id>", methods=["POST"])
     @login_required
     def handle_task(list_id, task_id):
