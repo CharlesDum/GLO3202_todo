@@ -92,6 +92,10 @@ ul {
     background-color: #218838;
 }
 
+.hidden {
+    display: none;
+}
+
 /* Style pour la navbar */
 .navbar {
     display: flex;

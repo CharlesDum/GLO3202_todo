@@ -87,6 +87,7 @@ def register_routes(app):
             "tasks": []
         }
         mongo.db.lists.insert_one(new_list)
+
         flash("Liste créée avec succès", "success")
         return redirect(url_for("index"))
     
@@ -106,22 +107,20 @@ def register_routes(app):
             if action == "update":
                 new_name = request.form.get("name")
                 if not new_name:
-                    flash("Le nom de la liste de ne pas être vide", "error")
+                    flash("Le nom de la liste doit contenir au moins un caractère", "error")
                     return redirect(url_for("index"))
                 
-                result = mongo.db.lists.update_one(
+                mongo.db.lists.update_one(
                     {"_id": ObjectId(list_id), "owner": current_user.username},
                     {"$set": {"name": new_name}}
                 )
 
-                if result.modified_count > 0:
-                    flash("Liste mise à jour avec succès", "success")
-                else:
-                    flash("Impossible de modifier la liste", "error")
-            elif action == "delete":
-                result = mongo.db.lists.delete_one({"_id": ObjectId(list_id), "owner": current_user.username})
+                flash("Liste mise à jour avec succès", "success")
 
-                flash("La liste a été supprimée avec succès", "success")
+            elif action == "delete":
+                mongo.db.lists.delete_one({"_id": ObjectId(list_id), "owner": current_user.username})
+
+                flash("Liste supprimée avec succès", "success")
 
         except Exception as e:
             flash(f"Une erreur est survenue : {str(e)}", "error")
@@ -144,15 +143,13 @@ def register_routes(app):
                 "completed": False
             }
 
-            result = mongo.db.lists.update_one(
+            mongo.db.lists.update_one(
                 {"_id": ObjectId(list_id), "owner": current_user.username},
                 {"$push": {"tasks":task}}
             )
 
-            if result.modified_count > 0:
-                flash("Tâche ajoutée avec succès", "success")
-            else:
-                flash("Impossible d'ajouter la tâche", "error")
+            flash("Tâche ajoutée avec succès", "success")
+
         except Exception as e:
             flash(f"Une erreur est survenue : {str(e)}", "error")
         
@@ -170,26 +167,25 @@ def register_routes(app):
                 new_description = request.form.get("description")
                 completed = request.form.get("completed") == "on"
 
-                result = mongo.db.lists.update_one(
+                if not new_description:
+                    flash("La description d'une tâche doit contenir au moins un caractère", "error")
+                    return redirect(url_for("index"))
+
+                mongo.db.lists.update_one(
                     list_filter,
                     {"$set": {"tasks.$.description": new_description, "tasks.$.completed": completed}}
                 )
 
-                if result.modified_count > 0:
-                    flash("Tâche mise à jour avec succès", "success")
-                else:
-                    flash("Impossible de mettre la tâche à jour", "error")
+                flash("Tâche mise à jour avec succès", "success")
             
             elif action == "delete":
-                result = mongo.db.lists.update_one(
+                mongo.db.lists.update_one(
                     {"_id": ObjectId(list_id), "owner": current_user.username},
                     {"$pull": {"tasks": {"_id": ObjectId(task_id)}}}
                 )
 
-                if result.modified_count > 0:
-                    flash("Tâche supprimée avec succès", "success")
-                else:
-                    flash("Impossible de supprimer la tâche", "error")
+                flash("Tâche supprimée avec succès", "success")
+
         except Exception as e:
             flash(f"Une erreur est survenue : {str(e)}", "error")
 
