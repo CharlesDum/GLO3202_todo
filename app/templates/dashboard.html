@@ -13,6 +13,7 @@
     <div class="accordion">
         {% for todo_list in lists %}
         <div class="accordion-item">
+            <!-- En-tête de l'accordéon -->
             <div class="accordion-header">
                 <form action="{{ url_for('handle_list', list_id=todo_list._id) }}" method="POST" class="list-form">
                     <input type="text" name="name" value="{{ todo_list.name }}" data-original-value="{{ todo_list.name }}">
@@ -20,7 +21,8 @@
                     <button type="submit" name="action" value="delete" class="delete-button">Supprimer</button>
                 </form>
             </div>
-            <div class="accordion-content">
+            <!-- Contenu de l'accordéon -->
+            <div class="accordion-content" style="display: none;">
                 <ul>
                     {% for task in todo_list.tasks %}
                     <!-- Afficher les tâches associées -->

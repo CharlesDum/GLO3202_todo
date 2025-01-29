@@ -1,28 +1,63 @@
-/* Scripts pour gérer les accordéons de tâches */
-document.addEventListener("DOMContentLoaded", function() {
-    const accordions = document.querySelectorAll('.accordion-header')
+/* Scripts pour gérer les accordéons */
+document.addEventListener("DOMContentLoaded", function () {
+    const accordions = document.querySelectorAll(".accordion-item")
+    const ACCORDION_STATE_KEY = "openAccordions"
 
-    accordions.forEach(accordion => {
-        accordion.addEventListener('click', function() {
-            const content = this.nextElementSibling
+    // Charger l'état des accordéons depuis le localStorage
+    function loadAccordionState() {
+        const savedState = localStorage.getItem(ACCORDION_STATE_KEY)
+        return savedState ? JSON.parse(savedState) : []
+    }
 
-            const isActive = content.style.display === 'block'
-            
-            if (!isActive) {
-                content.style.display = 'block'
+    // Sauvegarder l'état des accordéons dans le localStorage
+    function saveAccordionState(openIndexes) {
+        localStorage.setItem(ACCORDION_STATE_KEY, JSON.stringify(openIndexes))
+    }
+
+    // Mettre à jour l'affichage des accordéons en fonction de l'état sauvegardé
+    function updateAccordionDisplay() {
+        const openIndexes = loadAccordionState()
+
+        accordions.forEach((accordion, index) => {
+            const content = accordion.querySelector(".accordion-content")
+            if (openIndexes.includes(index)) {
+                content.style.display = "block"
+                accordion.classList.add("open")
             } else {
-                content.style.display = 'none'
+                content.style.display = "none"
+                accordion.classList.remove("open")
+            }
+        })
+    }
+
+    // Initialiser l'état des accordéons
+    updateAccordionDisplay()
+
+    // Ajouter des écouteurs d'événements pour gérer les clics sur les en-têtes
+    accordions.forEach((accordion, index) => {
+        const header = accordion.querySelector(".accordion-header")
+        const content = accordion.querySelector(".accordion-content")
+
+        header.addEventListener("click", function () {
+            const openIndexes = loadAccordionState()
+            const isActive = content.style.display === "block"
+
+            if (isActive) {
+                content.style.display = "none";
+                accordion.classList.remove("open")
+                const newIndexes = openIndexes.filter((i) => i !== index)
+                saveAccordionState(newIndexes)
+            } else {
+                content.style.display = "block"
+                accordion.classList.add("open")
+                if (!openIndexes.includes(index)) {
+                    openIndexes.push(index)
+                }
+                saveAccordionState(openIndexes)
             }
         })
     })
 })
-
-document.querySelectorAll('.accordion-header').forEach(header => {
-    header.addEventListener('click', function() {
-        const item = header.parentElement;
-        item.classList.toggle('open');
-    });
-});
 
 /* Script pour la validation des données des formulaires de connexion et d'inscription */
 document.querySelector('form').addEventListener('submit', function(event) {

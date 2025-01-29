@@ -18,6 +18,12 @@ ul {
 }
 
 /* Style pour les fomulaires */
+input[type=text] {
+    min-width: 300px;
+    max-width: 100%;
+    width: auto;
+}
+
 .form-create-list {
     display: flex;
     flex-direction: column;
