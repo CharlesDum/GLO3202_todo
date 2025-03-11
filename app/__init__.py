@@ -1,14 +1,18 @@
 from flask import Flask
 from flask_pymongo import PyMongo
 from flask_login import LoginManager
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import os
-from dotenv import load_dotenv
-from bson.objectid import ObjectId
-from app.models import User
 
 mongo = PyMongo()
 
 login_manager = LoginManager()
+
+limiter = Limiter(
+    key_func=get_remote_address,
+    default_limits=["5 per minute"]
+    ) 
 
 def create_app():
     app = Flask(__name__)
@@ -21,6 +25,7 @@ def create_app():
 
     mongo.init_app(app)
     login_manager.init_app(app)
+    limiter.init_app(app)
     login_manager.login_view = "login"
 
     return app

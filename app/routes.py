@@ -1,7 +1,7 @@
-from flask import render_template, request, redirect, url_for, flash, jsonify, abort
+from flask import render_template, request, redirect, url_for, flash, abort
 from flask_login import login_required, current_user, logout_user, login_user
 from bson.objectid import ObjectId
-from app import mongo, login_manager
+from app import mongo, login_manager, limiter
 from app.models import User
 from .forms import SignupForm, LoginForm
 
@@ -31,6 +31,7 @@ def register_routes(app):
     
     # Route vers la page de connexion [GET] ou pour connecter un utilisateur [POST]
     @app.route("/login", methods=["GET", "POST"])
+    @limiter.limit("5 per minute")
     def login():
         form = LoginForm()
         if request.method == "POST":
@@ -97,11 +98,10 @@ def register_routes(app):
     def handle_list(list_id):
         action = request.form.get("action")
 
-        try:
-            list_id = ObjectId(list_id)
-        except Exception:
-            flash("ID de la liste invalide", "error")
-            return redirect(url_for("index"))
+        list_data = mongo.db.lists.find_one({"_id": ObjectId(list_id), "owner": current_user.username})
+
+        if not list_data:
+            abort(403)
         
         try:
             if action == "update":
