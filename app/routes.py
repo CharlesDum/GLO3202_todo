@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, flash, jsonify
+from flask import render_template, request, redirect, url_for, flash, jsonify, abort
 from flask_login import login_required, current_user, logout_user, login_user
 from bson.objectid import ObjectId
 from app import mongo, login_manager
@@ -161,7 +161,16 @@ def register_routes(app):
     def handle_task(list_id, task_id):
         try:
             action = request.form.get("action")
-            list_filter = {"_id" : ObjectId(list_id), "owner": current_user.username, "tasks._id": ObjectId(task_id)}
+
+            list_data = mongo.db.lists.find_one({"_id": ObjectId(list_id), "owner": current_user.username})
+
+            if not list_data:
+                abort(403)
+            
+            task_data = next((t for t in list_data.get("tasks", []) if str(t["_id"]) == task_id), None)
+
+            if not task_data:
+                abort(403)
 
             if action == "update":
                 new_description = request.form.get("description")
@@ -172,7 +181,7 @@ def register_routes(app):
                     return redirect(url_for("index"))
 
                 mongo.db.lists.update_one(
-                    list_filter,
+                    {"_id": ObjectId(list_id), "owner": current_user.username, "tasks._id": ObjectId(task_id)},
                     {"$set": {"tasks.$.description": new_description, "tasks.$.completed": completed}}
                 )
 
