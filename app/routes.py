@@ -1,5 +1,6 @@
 from flask import render_template, request, redirect, url_for, flash, abort
 from flask_login import login_required, current_user, logout_user, login_user
+from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
 from app import mongo, login_manager, limiter
 from app.models import User
@@ -40,10 +41,13 @@ def register_routes(app):
                 password = form.password.data
 
                 user = mongo.db.users.find_one({"username": username})
-                if user and user["password"] == password:
+
+                if user and check_password_hash(user["password"], password):
                     login_user(User(user))
+
                     flash("Connexion réussie", "success")
                     return redirect(url_for("index"))
+                
                 flash("Nom d'utilisateur ou mot de passe incorrect", "error")
 
         return render_template("login.html", form=form)
@@ -57,9 +61,17 @@ def register_routes(app):
                 if form.validate_on_submit():
                     username = form.username.data
                     password = form.password.data
-                    user_id = mongo.db.users.insert_one({"username": username, "password": password}).inserted_id
+                    hashed_password = generate_password_hash(password)
+
+                    user_id = mongo.db.users.insert_one({
+                        "username": username,
+                        "password": hashed_password
+                        }).inserted_id
+                    
                     user = mongo.db.users.find_one({"_id": user_id})
+
                     login_user(User(user))
+                    
                     flash("Inscription réussie", "success")
                     return redirect(url_for("index"))
             

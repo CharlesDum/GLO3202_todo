@@ -4,8 +4,8 @@
     <!-- Formulaire pour créer une nouvelle liste -->
     <h2>Créer une nouvelle liste</h2>
     <form action="{{ url_for('create_list') }}" method="POST" class="form-create-list">
-    <input type="text" id="listName" name="name" placeholder="Nom de la liste" required>
-    <button type="submit">Créer</button>
+        <input type="text" id="listName" name="name" placeholder="Nom de la liste" required>
+        <button type="submit">Créer</button>
     </form>
 
     <!-- Afficher les listes existantes -->
@@ -16,7 +16,7 @@
             <!-- En-tête de l'accordéon -->
             <div class="accordion-header">
                 <form action="{{ url_for('handle_list', list_id=todo_list._id) }}" method="POST" class="list-form">
-                    <input type="text" name="name" value="{{ todo_list.name }}" data-original-value="{{ todo_list.name }}">
+                    <input type="text" name="name" value="{{ todo_list.name | e }}" data-original-value="{{ todo_list.name | e }}">
                     <button type="submit" name="action" value="update" class="update-button" disabled>Appliquer</button>
                     <button type="submit" name="action" value="delete" class="delete-button">Supprimer</button>
                 </form>
@@ -28,7 +28,7 @@
                     <!-- Afficher les tâches associées -->
                     <li>
                         <form action="{{ url_for('handle_task', list_id=todo_list._id, task_id=task._id) }}" method="POST" class="task-form">
-                            <input type="text" name="description" value="{{ task.description }}" data-original-value="{{ task.description }}">
+                            <input type="text" name="description" value="{{ task.description | e }}" data-original-value="{{ task.description | e }}">
                             <input type="checkbox" name="completed" {% if task.completed %}checked{% endif %} data-original-value="{{ 'checked' if task.completed else '' }}">
                             <button type="submit" name="action" value="update" class="update-button" disabled>Appliquer</button>
                             <button type="submit" name="action" value="delete" class="delete-button">Supprimer</button>

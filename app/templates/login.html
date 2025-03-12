@@ -15,7 +15,7 @@
         <div>
             {{ form.password.label }} <br>
             {{ form.password(size=20) }}
-            {% for error in form.username.errors %}
+            {% for error in form.password.errors %}
                 <span class="error">{{ error }}</span>
             {% endfor %}
         </div>
