@@ -7,6 +7,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+<script>
+    if (window.self !== window.top) {
+        document.body.innerHTML = "<h1>Ce site ne peut pas être chargé dans une iframe.</h1>"
+    }
+</script>
 <body>
 
     <!-- Bandeau de navigation -->

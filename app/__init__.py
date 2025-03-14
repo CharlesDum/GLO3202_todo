@@ -13,7 +13,6 @@ login_manager = LoginManager()
 
 limiter = Limiter(
     key_func=get_remote_address,
-    default_limits=["5 per minute"]
     ) 
 
 def create_app():
@@ -42,9 +41,10 @@ def create_app():
         "script-src" : ['\'self\''],
         "img-src" : ['\'self\'', 'data:'],
         "font-src": ['\'self\''],
-        "connect-src": ['\'self\'']
+        "connect-src": ['\'self\''],
+        "frame-ancestors": ["'none'"],
     }
 
-    Talisman(app, content_security_policy=csp)
+    Talisman(app, content_security_policy=csp, frame_options="DENY")
 
     return app
