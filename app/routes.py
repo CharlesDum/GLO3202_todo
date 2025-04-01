@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, url_for, flash, abort
 from flask_login import login_required, current_user, logout_user, login_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
-from app import mongo, login_manager, limiter
+from app import mongo, login_manager, limiter, log_to_file
 from app.models import User
 from .forms import SignupForm, LoginForm
 
@@ -48,6 +48,7 @@ def register_routes(app):
                     flash("Connexion réussie", "success")
                     return redirect(url_for("index"))
                 
+                log_to_file("ERROR", f"Tentative de connexion échouée pour {username} depuis {request.remote_addr}")
                 flash("Nom d'utilisateur ou mot de passe incorrect", "error")
 
         return render_template("login.html", form=form)
@@ -135,7 +136,8 @@ def register_routes(app):
                 flash("Liste supprimée avec succès", "success")
 
         except Exception as e:
-            flash(f"Une erreur est survenue : {str(e)}", "error")
+            log_to_file("ERROR", str(e))
+            flash(f"Une erreur interne est survenue. Veuillez réessayer plus tard", "error")
         
         return redirect(url_for("index"))
     
@@ -163,7 +165,8 @@ def register_routes(app):
             flash("Tâche ajoutée avec succès", "success")
 
         except Exception as e:
-            flash(f"Une erreur est survenue : {str(e)}", "error")
+            log_to_file("ERROR", str(e))
+            flash(f"Une erreur interne est survenue. Veuillez réessayer plus tard", "error")
         
         return redirect(url_for("index"))
     
@@ -208,6 +211,7 @@ def register_routes(app):
                 flash("Tâche supprimée avec succès", "success")
 
         except Exception as e:
-            flash(f"Une erreur est survenue : {str(e)}", "error")
+            log_to_file("ERROR", str(e))
+            flash(f"Une erreur interne est survenue. Veuillez réessayer plus tard", "error")
 
         return redirect(url_for("index"))

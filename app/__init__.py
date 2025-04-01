@@ -1,10 +1,10 @@
+from datetime import datetime, timezone
 from flask import Flask
 from flask_pymongo import PyMongo
 from flask_login import LoginManager
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_talisman import Talisman
-from flask_wtf import CSRFProtect
 import os
 
 mongo = PyMongo()
@@ -14,6 +14,10 @@ login_manager = LoginManager()
 limiter = Limiter(
     key_func=get_remote_address,
     ) 
+
+def log_to_file(level, message):
+    with open("error.log", "a") as f:
+        f.write(f"{datetime.now(timezone.utc)} - {level} - {message}\n")
 
 def create_app():
     app = Flask(__name__)
