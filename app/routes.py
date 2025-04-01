@@ -58,23 +58,26 @@ def register_routes(app):
     def signup():
         form = SignupForm()
         if request.method == "POST":
-            if request.method == "POST":
-                if form.validate_on_submit():
-                    username = form.username.data
-                    password = form.password.data
-                    hashed_password = generate_password_hash(password)
+            if form.validate_on_submit():
+                username = form.username.data
+                password = form.password.data
+                hashed_password = generate_password_hash(password)
 
-                    user_id = mongo.db.users.insert_one({
-                        "username": username,
-                        "password": hashed_password
-                        }).inserted_id
-                    
-                    user = mongo.db.users.find_one({"_id": user_id})
+                user_id = mongo.db.users.insert_one({
+                    "username": username,
+                    "password": hashed_password
+                    }).inserted_id
+                
+                user = mongo.db.users.find_one({"_id": user_id})
 
-                    login_user(User(user))
-                    
-                    flash("Inscription réussie", "success")
-                    return redirect(url_for("index"))
+                if not user:
+                    flash("Erreur lors de la création du compte", "error")
+                    return redirect(url_for("signup"))
+
+                login_user(User(user))
+                
+                flash("Inscription réussie", "success")
+                return redirect(url_for("index"))
             
         return render_template("signup.html", form=form)
     
